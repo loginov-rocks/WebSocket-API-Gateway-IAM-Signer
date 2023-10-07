@@ -1,0 +1,7 @@
+{
+  "url": "wss://abc123.execute-api.us-east-1.amazonaws.com/production",
+  "headers": {
+    "first": "one",
+    "second": "two"
+  }
+}
