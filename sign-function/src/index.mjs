@@ -41,10 +41,13 @@ export const handler = async (event) => {
     customHeader: 'customHeaderValue',
   };
 
-  const signedRequest = await sign(AWS_REGION, url, query, headers);
+  const response = await sign(AWS_REGION, url, query, headers);
+  const responseJson = JSON.stringify(response);
+
+  console.log('response', responseJson);
 
   return {
-    body: JSON.stringify(signedRequest),
+    body: responseJson,
     headers: {
       'content-type': 'application/json',
     },
