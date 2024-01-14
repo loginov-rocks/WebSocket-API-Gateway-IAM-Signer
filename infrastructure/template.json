@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Outputs": {
-    "SignUrl": {
+    "SignApiUrl": {
       "Value": {
         "Fn::Sub": [
           "${ApiBaseUrl}/sign",
@@ -16,7 +16,7 @@
         ]
       }
     },
-    "WebSocketUrl": {
+    "WebSocketApiUrl": {
       "Value": {
         "Fn::Sub": [
           "${ApiBaseUrl}/${WebSocketStage}",
@@ -440,6 +440,13 @@
                       "Arn"
                     ]
                   }
+                },
+                {
+                  "Action": "execute-api:ManageConnections",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApiGateway}/${WebSocketStage}/POST/@connections/*"
+                  }
                 }
               ]
             },
@@ -534,7 +541,7 @@
         },
         "Environment": {
           "Variables": {
-            "WEBSOCKET_API_URL": "wss://abc123.execute-api.us-east-1.amazonaws.com/production"
+            "WEBSOCKET_API_URL": "wss://abc123.execute-api.us-east-1.amazonaws.com/$default"
           }
         },
         "FunctionName": {
@@ -592,6 +599,9 @@
           "Variables": {
             "CONNECTIONS_TABLE_NAME": {
               "Ref": "ConnectionsTable"
+            },
+            "WEBSOCKET_API_GATEWAY_ENDPOINT": {
+              "Fn::Sub": "https://${WebSocketApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${WebSocketStage}"
             }
           }
         },
