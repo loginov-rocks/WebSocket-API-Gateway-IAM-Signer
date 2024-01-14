@@ -164,7 +164,7 @@
         "ApiId": {
           "Ref": "WebSocketApiGateway"
         },
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "AWS_IAM",
         "RouteKey": "$connect",
         "Target": {
           "Fn::Sub": "integrations/${WsConnectIntegration}"
@@ -177,7 +177,6 @@
         "ApiId": {
           "Ref": "WebSocketApiGateway"
         },
-        "AuthorizationType": "NONE",
         "RouteKey": "$default",
         "Target": {
           "Fn::Sub": "integrations/${WsDefaultIntegration}"
@@ -190,7 +189,6 @@
         "ApiId": {
           "Ref": "WebSocketApiGateway"
         },
-        "AuthorizationType": "NONE",
         "RouteKey": "$disconnect",
         "Target": {
           "Fn::Sub": "integrations/${WsDisconnectIntegration}"
@@ -294,7 +292,7 @@
                   "Action": "execute-api:Invoke",
                   "Effect": "Allow",
                   "Resource": {
-                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApiGateway}/${WebSocketStage}/*"
                   }
                 }
               ]
@@ -541,7 +539,19 @@
         },
         "Environment": {
           "Variables": {
-            "WEBSOCKET_API_URL": "wss://abc123.execute-api.us-east-1.amazonaws.com/$default"
+            "WEBSOCKET_API_URL": {
+              "Fn::Sub": [
+                "${ApiBaseUrl}/${WebSocketStage}",
+                {
+                  "ApiBaseUrl": {
+                    "Fn::GetAtt": [
+                      "WebSocketApiGateway",
+                      "ApiEndpoint"
+                    ]
+                  }
+                }
+              ]
+            }
           }
         },
         "FunctionName": {
