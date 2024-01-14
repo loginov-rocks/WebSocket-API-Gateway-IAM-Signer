@@ -15,6 +15,9 @@ export const handler = async (event) => {
   if (event.body) {
     try {
       const body = JSON.parse(event.body);
+
+      console.log('request', JSON.stringify(body));
+
       requestedHeaders = body.headers;
       requestedUrl = body.url;
     } catch (error) {
