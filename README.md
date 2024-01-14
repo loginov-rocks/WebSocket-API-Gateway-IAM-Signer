@@ -23,3 +23,13 @@ Where:
 * `1234567890` - account,
 * `abc123` - API Gateway ID,
 * `production` - stage.
+
+## wscat
+
+```sh
+npm install -g wscat
+```
+
+```sh
+wscat -c 'wss://abc123.execute-api.us-east-1.amazonaws.com/$default'
+```
