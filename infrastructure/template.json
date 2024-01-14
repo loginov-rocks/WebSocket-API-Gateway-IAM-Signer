@@ -74,6 +74,27 @@
         "StageName": "$default"
       }
     },
+    "ConnectionsTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "connectionId",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "connectionId",
+            "KeyType": "HASH"
+          }
+        ],
+        "TableName": {
+          "Fn::Sub": "${AWS::StackName}-connections-table"
+        }
+      }
+    },
     "SignFunctionRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -196,10 +217,13 @@
               "Version": "2012-10-17",
               "Statement": [
                 {
-                  "Action": "execute-api:Invoke",
+                  "Action": "dynamodb:PutItem",
                   "Effect": "Allow",
                   "Resource": {
-                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                    "Fn::GetAtt": [
+                      "ConnectionsTable",
+                      "Arn"
+                    ]
                   }
                 }
               ]
@@ -265,10 +289,13 @@
               "Version": "2012-10-17",
               "Statement": [
                 {
-                  "Action": "execute-api:Invoke",
+                  "Action": "dynamodb:GetItem",
                   "Effect": "Allow",
                   "Resource": {
-                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                    "Fn::GetAtt": [
+                      "ConnectionsTable",
+                      "Arn"
+                    ]
                   }
                 }
               ]
@@ -334,10 +361,13 @@
               "Version": "2012-10-17",
               "Statement": [
                 {
-                  "Action": "execute-api:Invoke",
+                  "Action": "dynamodb:DeleteItem",
                   "Effect": "Allow",
                   "Resource": {
-                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                    "Fn::GetAtt": [
+                      "ConnectionsTable",
+                      "Arn"
+                    ]
                   }
                 }
               ]
@@ -388,7 +418,9 @@
         },
         "Environment": {
           "Variables": {
-            "CONNECTIONS_TABLE_NAME": "connections-table"
+            "CONNECTIONS_TABLE_NAME": {
+              "Ref": "ConnectionsTable"
+            }
           }
         },
         "FunctionName": {
@@ -415,7 +447,9 @@
         },
         "Environment": {
           "Variables": {
-            "CONNECTIONS_TABLE_NAME": "connections-table"
+            "CONNECTIONS_TABLE_NAME": {
+              "Ref": "ConnectionsTable"
+            }
           }
         },
         "FunctionName": {
@@ -442,7 +476,9 @@
         },
         "Environment": {
           "Variables": {
-            "CONNECTIONS_TABLE_NAME": "connections-table"
+            "CONNECTIONS_TABLE_NAME": {
+              "Ref": "ConnectionsTable"
+            }
           }
         },
         "FunctionName": {

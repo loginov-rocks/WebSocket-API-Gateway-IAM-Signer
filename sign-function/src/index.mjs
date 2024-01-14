@@ -21,7 +21,7 @@ export const handler = async (event) => {
       requestedHeaders = body.headers;
       requestedUrl = body.url;
     } catch (error) {
-      console.error(error);
+      console.error('error', JSON.stringify(error));
 
       return { statusCode: 400 };
     }
@@ -41,7 +41,15 @@ export const handler = async (event) => {
     customHeader: 'customHeaderValue',
   };
 
-  const response = await sign(AWS_REGION, url, query, headers);
+  let response;
+  try {
+    response = await sign(AWS_REGION, url, query, headers);
+  } catch (error) {
+    console.error('error', JSON.stringify(error));
+
+    return { statusCode: 500 };
+  }
+
   const responseJson = JSON.stringify(response);
 
   console.log('response', responseJson);
