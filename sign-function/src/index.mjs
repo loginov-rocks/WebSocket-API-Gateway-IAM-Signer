@@ -1,46 +1,47 @@
-import { defaultProvider } from '@aws-sdk/credential-provider-node';
-import { Hash } from '@aws-sdk/hash-node';
-import { HttpRequest } from '@aws-sdk/protocol-http';
-import { SignatureV4 } from '@aws-sdk/signature-v4';
-import { URL } from 'url';
+import { sign } from './sign.mjs';
 
+// Environment variable provided by AWS.
 const AWS_REGION = process.env.AWS_REGION;
+
+// Environment variable injected by CloudFormation.
+const WEBSOCKET_API_URL = process.env.WEBSOCKET_API_URL;
 
 export const handler = async (event) => {
   console.log('event', JSON.stringify(event));
 
-  const body = JSON.parse(event.body);
-  const { url, headers } = body;
-  const urlObject = new URL(url);
+  let requestedHeaders, requestedUrl;
 
-  const httpRequest = new HttpRequest({
-    headers: {
-      ...headers,
-      host: urlObject.hostname,
-    },
-    hostname: urlObject.hostname,
-    path: urlObject.pathname,
-    protocol: urlObject.protocol,
-    query: Object.fromEntries(urlObject.searchParams),
-  });
+  // Take headers and URL provided by the client, if any.
+  if (event.body) {
+    try {
+      const body = JSON.parse(event.body);
+      requestedHeaders = body.headers;
+      requestedUrl = body.url;
+    } catch (error) {
+      console.error(error);
 
-  const signatureV4 = new SignatureV4({
-    credentials: defaultProvider(),
-    region: AWS_REGION,
-    service: 'execute-api',
-    sha256: Hash.bind(null, 'sha256'),
-  });
+      return { statusCode: 400 };
+    }
+  }
 
-  const signedHttpRequest = await signatureV4.sign(httpRequest);
+  // Use WebSocket API URL by default.
+  const url = requestedUrl ? requestedUrl : WEBSOCKET_API_URL;
+
+  // Provide additional query parameters according to requirements.
+  const query = {
+    customQueryParameter: 'customQueryParameterValue',
+  };
+
+  // Provide additional headers according to requirements.
+  const headers = {
+    ...requestedHeaders,
+    customHeader: 'customHeaderValue',
+  };
+
+  const signedRequest = await sign(AWS_REGION, url, query, headers);
 
   return {
-    body: JSON.stringify({
-      headers: {
-        ...headers,
-        ...signedHttpRequest.headers,
-      },
-      url: urlObject,
-    }),
+    body: JSON.stringify(signedRequest),
     headers: {
       'content-type': 'application/json',
     },

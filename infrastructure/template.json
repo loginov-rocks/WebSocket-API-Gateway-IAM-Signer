@@ -152,6 +152,11 @@
         "Code": {
           "ZipFile": "exports.handler = async (event) => ({ body: JSON.stringify(event), headers: { 'content-type': 'application/json' }, statusCode: 200 });"
         },
+        "Environment": {
+          "Variables": {
+            "WEBSOCKET_API_URL": "wss://abc123.execute-api.us-east-1.amazonaws.com/production"
+          }
+        },
         "FunctionName": {
           "Fn::Sub": "${AWS::StackName}-sign-function"
         },
