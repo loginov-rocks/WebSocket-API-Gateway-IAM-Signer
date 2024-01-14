@@ -9,8 +9,8 @@ const AWS_REGION = process.env.AWS_REGION;
 export const handler = async (event) => {
   console.log('event', JSON.stringify(event));
 
-  const { url, headers } = event;
-
+  const body = JSON.parse(event.body);
+  const { url, headers } = body;
   const urlObject = new URL(url);
 
   const httpRequest = new HttpRequest({
@@ -34,13 +34,16 @@ export const handler = async (event) => {
   const signedHttpRequest = await signatureV4.sign(httpRequest);
 
   return {
-    statusCode: 200,
     body: JSON.stringify({
-      url: urlObject,
       headers: {
         ...headers,
         ...signedHttpRequest.headers,
       },
+      url: urlObject,
     }),
+    headers: {
+      'content-type': 'application/json',
+    },
+    statusCode: 200,
   };
 };
