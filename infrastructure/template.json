@@ -143,6 +143,213 @@
         }
       }
     },
+    "WsConnectFunctionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": "logs:CreateLogGroup",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                  }
+                },
+                {
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": [
+                      "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${FunctionName}:*",
+                      {
+                        "FunctionName": {
+                          "Fn::Sub": "${AWS::StackName}-ws-connect-function"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "PolicyName": "AWSLambdaBasicExecutionRole"
+          },
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": "execute-api:Invoke",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                  }
+                }
+              ]
+            },
+            "PolicyName": "CustomPolicy"
+          }
+        ],
+        "RoleName": {
+          "Fn::Sub": "${AWS::StackName}-ws-connect-function-role"
+        }
+      }
+    },
+    "WsDefaultFunctionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": "logs:CreateLogGroup",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                  }
+                },
+                {
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": [
+                      "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${FunctionName}:*",
+                      {
+                        "FunctionName": {
+                          "Fn::Sub": "${AWS::StackName}-ws-default-function"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "PolicyName": "AWSLambdaBasicExecutionRole"
+          },
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": "execute-api:Invoke",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                  }
+                }
+              ]
+            },
+            "PolicyName": "CustomPolicy"
+          }
+        ],
+        "RoleName": {
+          "Fn::Sub": "${AWS::StackName}-ws-default-function-role"
+        }
+      }
+    },
+    "WsDisconnectFunctionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Effect": "Allow"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": "logs:CreateLogGroup",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                  }
+                },
+                {
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": [
+                      "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${FunctionName}:*",
+                      {
+                        "FunctionName": {
+                          "Fn::Sub": "${AWS::StackName}-ws-disconnect-function"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "PolicyName": "AWSLambdaBasicExecutionRole"
+          },
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": "execute-api:Invoke",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*"
+                  }
+                }
+              ]
+            },
+            "PolicyName": "CustomPolicy"
+          }
+        ],
+        "RoleName": {
+          "Fn::Sub": "${AWS::StackName}-ws-disconnect-function-role"
+        }
+      }
+    },
     "SignFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -164,6 +371,87 @@
         "Role": {
           "Fn::GetAtt": [
             "SignFunctionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs20.x"
+      }
+    },
+    "WsConnectFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Architectures": [
+          "arm64"
+        ],
+        "Code": {
+          "ZipFile": "exports.handler = async (event) => ({ body: JSON.stringify(event), headers: { 'content-type': 'application/json' }, statusCode: 200 });"
+        },
+        "Environment": {
+          "Variables": {
+            "CONNECTIONS_TABLE_NAME": "connections-table"
+          }
+        },
+        "FunctionName": {
+          "Fn::Sub": "${AWS::StackName}-ws-connect-function"
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "WsConnectFunctionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs20.x"
+      }
+    },
+    "WsDefaultFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Architectures": [
+          "arm64"
+        ],
+        "Code": {
+          "ZipFile": "exports.handler = async (event) => ({ body: JSON.stringify(event), headers: { 'content-type': 'application/json' }, statusCode: 200 });"
+        },
+        "Environment": {
+          "Variables": {
+            "CONNECTIONS_TABLE_NAME": "connections-table"
+          }
+        },
+        "FunctionName": {
+          "Fn::Sub": "${AWS::StackName}-ws-default-function"
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "WsDefaultFunctionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs20.x"
+      }
+    },
+    "WsDisconnectFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Architectures": [
+          "arm64"
+        ],
+        "Code": {
+          "ZipFile": "exports.handler = async (event) => ({ body: JSON.stringify(event), headers: { 'content-type': 'application/json' }, statusCode: 200 });"
+        },
+        "Environment": {
+          "Variables": {
+            "CONNECTIONS_TABLE_NAME": "connections-table"
+          }
+        },
+        "FunctionName": {
+          "Fn::Sub": "${AWS::StackName}-ws-disconnect-function"
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "WsDisconnectFunctionRole",
             "Arn"
           ]
         },
