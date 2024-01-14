@@ -1,6 +1,10 @@
 {
   "dynamoDbItem": {
-    "connectionId": "Rg_4Gd9SoAMCEpg="
+    "customHeader": "customHeaderValue",
+    "connectionId": "Rg_4Gd9SoAMCEpg=",
+    "clientQueryParameter": "clientQueryParameterValue",
+    "customQueryParameter": "customQueryParameterValue",
+    "clientHeader": "clientHeaderValue"
   },
   "event": {
     "requestContext": {

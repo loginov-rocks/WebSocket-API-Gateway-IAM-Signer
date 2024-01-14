@@ -11,8 +11,17 @@ export const handler = async (event) => {
 
   const { connectionId } = event.requestContext;
 
+  // Obtain headers and query parameters added to the request by Sign Function.
+  const { headers, queryStringParameters } = event;
+  const { clientHeader, customHeader } = headers;
+  const { clientQueryParameter, customQueryParameter } = queryStringParameters;
+
+  const item = {
+    connectionId, clientHeader, clientQueryParameter, customHeader, customQueryParameter,
+  };
+
   const putCommand = new PutCommand({
-    Item: { connectionId },
+    Item: item,
     TableName: CONNECTIONS_TABLE_NAME,
   });
 
