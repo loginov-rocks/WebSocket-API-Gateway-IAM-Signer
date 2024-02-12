@@ -1,10 +1,9 @@
-import { defaultProvider } from '@aws-sdk/credential-provider-node';
 import { Hash } from '@aws-sdk/hash-node';
 import { HttpRequest } from '@aws-sdk/protocol-http';
 import { SignatureV4 } from '@aws-sdk/signature-v4';
 import { URL } from 'url';
 
-export const sign = async (region, url, query = {}, headers = {}) => {
+export const sign = async (region, credentials, url, query = {}, headers = {}) => {
   const urlObject = new URL(url);
 
   // Add query parameters passed as argument, if any.
@@ -26,8 +25,7 @@ export const sign = async (region, url, query = {}, headers = {}) => {
   });
 
   const signatureV4 = new SignatureV4({
-    // Modify `credentials` to use a custom identity.
-    credentials: defaultProvider(),
+    credentials,
     region,
     service: 'execute-api',
     sha256: Hash.bind(null, 'sha256'),

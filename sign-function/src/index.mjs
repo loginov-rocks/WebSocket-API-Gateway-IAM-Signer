@@ -1,3 +1,5 @@
+import { defaultProvider } from '@aws-sdk/credential-provider-node';
+
 import { sign } from './sign.mjs';
 
 // Environment variable provided by AWS.
@@ -5,6 +7,12 @@ const AWS_REGION = process.env.AWS_REGION;
 
 // Environment variable injected by CloudFormation.
 const WEBSOCKET_API_URL = process.env.WEBSOCKET_API_URL;
+
+// Set up custom access key ID and secret access key environment variables to use custom identity.
+const credentials = process.env.CUSTOM_ACCESS_KEY_ID && process.env.CUSTOM_SECRET_ACCESS_KEY ? {
+  accessKeyId: process.env.CUSTOM_ACCESS_KEY_ID,
+  secretAccessKey: process.env.CUSTOM_SECRET_ACCESS_KEY,
+} : defaultProvider();
 
 export const handler = async (event) => {
   console.log('event', JSON.stringify(event));
@@ -43,7 +51,7 @@ export const handler = async (event) => {
 
   let response;
   try {
-    response = await sign(AWS_REGION, url, query, headers);
+    response = await sign(AWS_REGION, credentials, url, query, headers);
   } catch (error) {
     console.error('error', JSON.stringify(error));
 

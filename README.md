@@ -2,6 +2,11 @@
 
 WebSocket API Gateway IAM Signer.
 
+## Quick Start
+
+Deploy CloudFormation stack and upload functions source code (note .mjs extension instead of .js deployed by
+CloudFormation by default) in Lambdas.
+
 ## Lambda Policy
 
 ```json
@@ -33,3 +38,9 @@ npm install -g wscat
 ```sh
 wscat -c 'wss://abc123.execute-api.us-east-1.amazonaws.com/$default'
 ```
+
+## Reference
+
+* https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+* https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-auth-using-authorization-header.html
+* https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html
