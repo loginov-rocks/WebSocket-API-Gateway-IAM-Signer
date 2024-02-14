@@ -1,0 +1,64 @@
+openapi: 3.0.3
+
+info:
+  title: Sign Function
+  contact:
+    name: Danila Loginov
+    email: danila@loginov.rocks
+    url: https://loginov.rocks
+  version: 0.0.0
+  license:
+    name: MIT
+    url: https://github.com/loginov-rocks/WebSocket-API-Gateway-IAM-Signer/blob/main/LICENSE
+
+externalDocs:
+  description: GitHub
+  url: https://github.com/loginov-rocks/WebSocket-API-Gateway-IAM-Signer
+
+paths:
+  /sign:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authMethod:
+                  enum:
+                    - header
+                    - query
+                  type: string
+                headers:
+                  type: object
+                  additionalProperties:
+                    type: string
+                query:
+                  type: object
+                  additionalProperties:
+                    type: string
+                url:
+                  format: uri
+                  type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  url:
+                    format: uri
+                    type: string
+                required:
+                  - headers
+                  - url
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error

@@ -34,6 +34,6 @@
     "time": "14/Jan/2024:03:58:11 +0000",
     "timeEpoch": 1705204691238
   },
-  "body": "{\"headers\":{\"clientHeader\":\"clientHeaderValue\"},\"url\":\"wss://abc123.execute-api.us-east-1.amazonaws.com/development\"}",
+  "body": "{\"headers\":{\"clientHeader\":\"clientHeaderValue\"},\"url\":\"wss://abc123.execute-api.us-east-1.amazonaws.com/$default\"}",
   "isBase64Encoded": false
 }

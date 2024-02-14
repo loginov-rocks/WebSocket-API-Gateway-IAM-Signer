@@ -5,28 +5,29 @@ import { sign } from './sign.mjs';
 // Environment variable provided by AWS.
 const AWS_REGION = process.env.AWS_REGION;
 
-// Environment variable injected by CloudFormation.
-const WEBSOCKET_API_URL = process.env.WEBSOCKET_API_URL;
-
 // Set up custom access key ID and secret access key environment variables to use custom identity.
 const credentials = process.env.CUSTOM_ACCESS_KEY_ID && process.env.CUSTOM_SECRET_ACCESS_KEY ? {
   accessKeyId: process.env.CUSTOM_ACCESS_KEY_ID,
   secretAccessKey: process.env.CUSTOM_SECRET_ACCESS_KEY,
 } : defaultProvider();
 
+// Environment variable injected by CloudFormation.
+const WEBSOCKET_API_URL = process.env.WEBSOCKET_API_URL;
+
 export const handler = async (event) => {
   console.log('event', JSON.stringify(event));
 
-  let requestedHeaders, requestedUrl;
+  let requestedAuthMethod, requestedHeaders, requestedQuery, requestedUrl;
 
-  // Take headers and URL provided by the client, if any.
   if (event.body) {
     try {
       const body = JSON.parse(event.body);
 
-      console.log('request', JSON.stringify(body));
+      console.log('body', JSON.stringify(body));
 
+      requestedAuthMethod = body.authMethod;
       requestedHeaders = body.headers;
+      requestedQuery = body.query;
       requestedUrl = body.url;
     } catch (error) {
       console.error('error', JSON.stringify(error));
@@ -35,23 +36,25 @@ export const handler = async (event) => {
     }
   }
 
-  // Use WebSocket API URL by default.
+  // Fallbacks.
+  const authMethod = requestedAuthMethod ? requestedAuthMethod : 'header';
   const url = requestedUrl ? requestedUrl : WEBSOCKET_API_URL;
 
-  // Provide additional query parameters according to requirements.
+  // Provide additional query parameters based on requirements.
   const query = {
-    customQueryParameter: 'customQueryParameterValue',
+    ...requestedQuery,
+    // customQueryParameter: 'customQueryParameterValue',
   };
 
-  // Provide additional headers according to requirements.
+  // Provide additional headers based on requirements.
   const headers = {
     ...requestedHeaders,
-    customHeader: 'customHeaderValue',
+    // customHeader: 'customHeaderValue',
   };
 
   let response;
   try {
-    response = await sign(AWS_REGION, credentials, url, query, headers);
+    response = await sign(AWS_REGION, credentials, authMethod, url, query, headers);
   } catch (error) {
     console.error('error', JSON.stringify(error));
 
@@ -60,13 +63,13 @@ export const handler = async (event) => {
 
   const responseJson = JSON.stringify(response);
 
-  console.log('response', responseJson);
+  console.log('responseJson', responseJson);
 
   return {
     body: responseJson,
     headers: {
       'content-type': 'application/json',
     },
-    statusCode: 200,
+    statusCode: 201,
   };
 };

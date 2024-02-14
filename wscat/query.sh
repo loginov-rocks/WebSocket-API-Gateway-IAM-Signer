@@ -1,0 +1,1 @@
+wscat -c 'wss://abc123.execute-api.us-east-1.amazonaws.com/$default?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAWT7PK3CR3PLXHJQ2%2F20231007%2Fus-east-1%2Fexecute-api%2Faws4_request&X-Amz-Date=20231007T030052Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=47de6de7405f9825c2606be675bbd3a7dc09529c855c8056b62dd92783e0e2d2'

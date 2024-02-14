@@ -7,5 +7,5 @@
     "x-amz-content-sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b856",
     "authorization": "AWS4-HMAC-SHA256 Credential=ASIAWT7PK3CR3PLXHJQ2/20231007/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date;x-amz-security-token, Signature=47de6de7405f9825c2606be675bbd3a7dc09529c855c8056b62dd92783e0e2d2"
   },
-  "url": "wss://abc123.execute-api.us-east-1.amazonaws.com/production?customQueryParameter=customQueryParameterValue"
+  "url": "wss://abc123.execute-api.us-east-1.amazonaws.com/$default?customQueryParameter=customQueryParameterValue"
 }

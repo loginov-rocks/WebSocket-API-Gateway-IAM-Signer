@@ -2,5 +2,5 @@
   "headers": {
     "clientHeader": "clientHeaderValue"
   },
-  "url": "wss://abc123.execute-api.us-east-1.amazonaws.com/development?clientQueryParameter=clientQueryParameterValue"
+  "url": "wss://abc123.execute-api.us-east-1.amazonaws.com/$default?clientQueryParameter=clientQueryParameterValue"
 }
