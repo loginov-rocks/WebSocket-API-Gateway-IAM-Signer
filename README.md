@@ -43,3 +43,7 @@ wscat -c 'wss://abc123.execute-api.us-east-1.amazonaws.com/$default'
 
 * https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-control-access-iam.html
 * https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html
+
+## Gists
+
+1. https://gist.github.com/loginov-rocks/a572bf4013d77d96fa7dc885a8450734
