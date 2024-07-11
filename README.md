@@ -2,6 +2,8 @@
 
 WebSocket API Gateway IAM Signer.
 
+Medium: https://loginov-rocks.medium.com/authorize-access-to-websocket-api-gateway-with-aws-signature-v4-f7e6b0e39f0a
+
 ## Quick Start
 
 Deploy CloudFormation stack and upload functions source code (note .mjs extension instead of .js deployed by
