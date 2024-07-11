@@ -1,8 +1,6 @@
 # WebSocket API Gateway IAM Signer
 
-WebSocket API Gateway IAM Signer.
-
-Medium: https://loginov-rocks.medium.com/authorize-access-to-websocket-api-gateway-with-aws-signature-v4-f7e6b0e39f0a
+Authorize Access to WebSocket API Gateway with AWS Signature V4: [Medium](https://loginov-rocks.medium.com/authorize-access-to-websocket-api-gateway-with-aws-signature-v4-f7e6b0e39f0a)
 
 ## Quick Start
 
